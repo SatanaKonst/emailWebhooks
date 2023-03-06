@@ -21,7 +21,7 @@ services:
     container_name: webserver
     restart: always
     ports:
-      - 88:80
+      - "88:80"
     volumes:
       - "./src/:/var/www/html/"
       - "./configs/php/php.ini:/usr/local/etc/php/php.ini"
