@@ -1,0 +1,8 @@
+TRAEFIK_HOST_DAMAIN="panel.home.site"
+TRAEFIK_DASHBOARD_AUTH="test:$$apr1$$H6uskkkW$$IgXLP6ewTrSuBkTrqE8wj/"
+
+SITE_HOST_DOMAIN="email-hook.home.site"
+
+DB_NAME="emailWebhooksDb"
+DB_USER="emailWebhooksDb"
+DB_PASS=""
