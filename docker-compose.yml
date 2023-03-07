@@ -10,6 +10,8 @@ services:
       MYSQL_USER: "${DB_USER}"
       MYSQL_PASSWORD: "${DB_PASS}"
       MYSQL_RANDOM_ROOT_PASSWORD: 'yes'
+    ports:
+      - 3306:3306
     volumes:
       - "databases:/var/lib/mysql"
       - "./configs/mysql/slow-query.log:/var/log/mysql/mysql-slow.log"
