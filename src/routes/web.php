@@ -87,4 +87,9 @@ Route::middleware('auth')->group(function () {
             );
         }
     );
+
+    Route::get('/imap', function () {
+        $imap = new \App\Http\Controllers\Imap();
+        $imap->getEmails();
+    });
 });

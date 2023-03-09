@@ -45,6 +45,11 @@ RUN docker-php-ext-configure intl --enable-intl && \
         exif opcache \
     && docker-php-source delete
 
+RUN apt-get install -y libc-client-dev libkrb5-dev && \
+    rm -r /var/lib/apt/lists/* && \
+    docker-php-ext-configure imap --with-kerberos --with-imap-ssl && \
+    docker-php-ext-install imap
+
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
 RUN a2enmod rewrite && a2enmod headers
