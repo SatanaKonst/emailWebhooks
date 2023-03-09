@@ -16,7 +16,7 @@ class CreateJobRulesTable extends Migration
         Schema::create('job_rules', function (Blueprint $table) {
             $table->id()->autoIncrement();
             $table->timestamps();
-            $table->integer('job_id');
+            $table->integer('jobs_id');
             $table->string('regex')->nullable();
             $table->string('webhook_method')->nullable();
             $table->string('webhook_url')->nullable();

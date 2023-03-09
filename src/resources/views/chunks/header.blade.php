@@ -21,11 +21,11 @@
             <i class="fas fa-bars"></i>
         </button>
         <div class="collapse navbar-collapse" id="navbarResponsive">
-            @auth
+            @guest
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item"><a class="nav-link" href="/login">Авторизация</a></li>
                 </ul>
-            @endauth
+            @endguest
         </div>
     </div>
 </nav>

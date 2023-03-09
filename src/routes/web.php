@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\Jobs;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -17,12 +19,15 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::middleware('guest')->namespace('\App\Http\Controllers')->group(function () {
+Route::namespace('\App\Http\Controllers')->group(function () {
 
     /**
      * Авторизация
      */
     Route::get('/login', function () {
+        if (Auth::check()) {
+            return redirect()->intended('dashboard');
+        }
         return view('auth.login');
     });
 
@@ -32,6 +37,9 @@ Route::middleware('guest')->namespace('\App\Http\Controllers')->group(function (
      * Регистрация
      */
     Route::get('/register', function () {
+        if (Auth::check()) {
+            return redirect()->intended('dashboard');
+        }
         return view('auth.register');
     });
 
@@ -40,7 +48,43 @@ Route::middleware('guest')->namespace('\App\Http\Controllers')->group(function (
 
 
 Route::middleware('auth')->group(function () {
-    Route::get('dashboard', function () {
-        return view('dashboard.index');
+
+    /**
+     * Главная страница панели
+     */
+    Route::get('/dashboard', function () {
+        /**
+         * Получим все jobs данного пользователя
+         */
+        $jobs = Jobs::query()->where('user_id', '=', Auth::id())->get();
+        return view(
+            'dashboard.index',
+            array(
+                'jobs' => $jobs
+            )
+        );
     });
+
+    /**
+     * Детальная страница задачи
+     */
+    Route::get(
+        '/dashboard/{job}',
+        function (Jobs $job) {
+
+            $viewParam = array(
+                'job' => $job,
+            );
+
+            if (($job->user_id !== Auth::id())) {
+                $viewParam['error'] = array(
+                    'Задача не найдена'
+                );
+            }
+            return view(
+                'dashboard.job-detail',
+                $viewParam
+            );
+        }
+    );
 });

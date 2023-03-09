@@ -15,7 +15,7 @@ class AuthController extends Controller
             var_dump($request);
             echo 'Неправильный логин или пароль';
         } else {
-            return redirect()->intended('dashboard.index');
+            return redirect()->intended('dashboard');
         }
     }
 
@@ -29,6 +29,6 @@ class AuthController extends Controller
 
         Auth::loginUsingId($user->id);
 
-        return redirect()->intended('dashboard.index');
+        return redirect()->intended('dashboard');
     }
 }

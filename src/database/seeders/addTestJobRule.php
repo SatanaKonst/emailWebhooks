@@ -17,7 +17,7 @@ class addTestJobRule extends Seeder
     {
         $job = Jobs::query()->where('title', 'Test Job')->first();
         $newJobRule = new JobRules();
-        $newJobRule->job_id = $job->id;
+        $newJobRule->jobs_id = $job->id;
         $newJobRule->regex = '/test match/m';
         $newJobRule->webhook_method = 'GET';
         $newJobRule->webhook_url = 'https://google.com';
