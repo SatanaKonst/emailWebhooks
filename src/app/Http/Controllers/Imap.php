@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use Webklex\IMAP\Facades\Client;
-use Webklex\PHPIMAP\Folder;
 use Webklex\PHPIMAP\Message;
 use Webklex\PHPIMAP\Support\MessageCollection;
 
@@ -100,11 +99,25 @@ class Imap extends Controller
         return $this->messages;
     }
 
-    public function filterEmailByRegex(string $regex)
+    /** Поиск по регулярному выражению
+     * @param string $regex
+     * @return MessageCollection
+     */
+    public function filterEmailByRegex(string $regex): MessageCollection
     {
         $this->messages = $this->messages->filter(function (Message $message) use ($regex) {
-            $textInMessage = mb_strtolower($message->getTextBody());
-            if (mb_strpos($textInMessage, $text) !== false) {
+            /**
+             * Собираем все данные в 1 переменную и будем по ней искать
+             */
+            $searchData = [
+                mb_strtolower($message->getSubject()->toString()),
+                mb_strtolower($message->getFrom()->toString()),
+                mb_strtolower($message->getTextBody()),
+            ];
+            $searchData = implode(' ', $searchData);
+
+            preg_match_all($regex, $searchData, $matches, PREG_SET_ORDER, 0);
+            if (is_array($matches) && !empty($matches)) {
                 return $message;
             }
         });

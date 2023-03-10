@@ -53,3 +53,7 @@ RUN apt-get install -y libc-client-dev libkrb5-dev && \
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
 RUN a2enmod rewrite && a2enmod headers
+
+RUN touch /etc/cron.d/laravel_schedule && chmod 0644 /etc/cron.d/laravel_schedule && \
+    echo "* * * * * cd /var/www/html && php artisan schedule:run >> /dev/null 2>&1" > /etc/cron.d/laravel_schedule && \
+    touch /var/log/cron.log
