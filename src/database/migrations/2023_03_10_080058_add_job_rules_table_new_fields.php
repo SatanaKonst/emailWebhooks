@@ -13,10 +13,9 @@ class AddJobRulesTableNewFields extends Migration
      */
     public function up()
     {
-        Schema::table('job_rules', function (Blueprint $table){
+        Schema::table('job_rules', function (Blueprint $table) {
             $table->string('sender')->nullable();
             $table->string('theme')->nullable();
-            $table->string('sub_string_search')->nullable();
         });
     }
 
@@ -27,10 +26,9 @@ class AddJobRulesTableNewFields extends Migration
      */
     public function down()
     {
-       Schema::dropColumns('job_rules', array(
-           'sender',
-           'theme',
-           'sub_string_search'
-       ));
+        Schema::dropColumns('job_rules', array(
+            'sender',
+            'theme'
+        ));
     }
 }

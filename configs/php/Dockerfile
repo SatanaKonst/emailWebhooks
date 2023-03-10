@@ -1,7 +1,10 @@
 FROM php:8.2.3-apache
 
-RUN apt-get update \
-  && apt-get install -y \
+RUN apt-get update && \
+  echo "Europe/Moscow" > /etc/timezone && \
+  rm -rf /etc/localtime && \
+  ln -s /usr/share/zoneinfo/Europe/Moscow /etc/localtime && \
+  apt-get install -y \
              apt-utils \
              man \
              curl \

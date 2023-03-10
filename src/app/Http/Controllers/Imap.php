@@ -50,62 +50,78 @@ class Imap extends Controller
 
     /** фильтровать письма по отправителю. Вызывается после get()
      * @param string $from
+     * @param MessageCollection|null $messagesForFiltered
      * @return MessageCollection
      */
-    public function filterEmailByFrom(string $from): MessageCollection
+    public function filterEmailByFrom(string $from, MessageCollection $messagesForFiltered = null): MessageCollection
     {
         $from = mb_strtolower($from);
-        $this->messages = $this->messages->filter(function (Message $message) use ($from) {
+        if (is_null($messagesForFiltered)) {
+            $messagesForFiltered = $this->messages;
+        }
+        $messages = $messagesForFiltered->filter(function (Message $message) use ($from) {
             $fromInMessage = mb_strtolower($message->getFrom()->toString());
             if (mb_strpos($fromInMessage, $from) !== false) {
                 return $message;
             }
         });
 
-        return $this->messages;
+        return $messages;
     }
 
     /** фильтровать письма по подстроке. Вызывается после get()
      * @param string $text
+     * @param MessageCollection|null $messagesForFiltered
      * @return MessageCollection
      */
-    public function filterEmailByTitle(string $text): MessageCollection
+    public function filterEmailByTitle(string $text, MessageCollection $messagesForFiltered = null): MessageCollection
     {
         $text = mb_strtolower($text);
-        $this->messages = $this->messages->filter(function (Message $message) use ($text) {
+        if (is_null($messagesForFiltered)) {
+            $messagesForFiltered = $this->messages;
+        }
+        $messages = $messagesForFiltered->filter(function (Message $message) use ($text) {
             $textInMessage = mb_strtolower($message->getSubject()->toString());
             if (mb_strpos($textInMessage, $text) !== false) {
                 return $message;
             }
         });
 
-        return $this->messages;
+        return $messages;
     }
 
     /** фильтровать по подстроке в теле письма. Вызывается после get()
      * @param string $text
+     * @param MessageCollection|null $messagesForFiltered
      * @return MessageCollection
      */
-    public function filterEmailByBody(string $text): MessageCollection
+    public function filterEmailByBody(string $text, MessageCollection $messagesForFiltered = null): MessageCollection
     {
         $text = mb_strtolower($text);
-        $this->messages = $this->messages->filter(function (Message $message) use ($text) {
+        if (is_null($messagesForFiltered)) {
+            $messagesForFiltered = $this->messages;
+        }
+        $messages = $messagesForFiltered->filter(function (Message $message) use ($text) {
             $textInMessage = mb_strtolower($message->getTextBody());
             if (mb_strpos($textInMessage, $text) !== false) {
                 return $message;
             }
         });
 
-        return $this->messages;
+        return $messages;
     }
 
     /** Поиск по регулярному выражению
      * @param string $regex
+     * @param MessageCollection|null $messagesForFiltered
      * @return MessageCollection
      */
-    public function filterEmailByRegex(string $regex): MessageCollection
+    public function filterEmailByRegex(string $regex, MessageCollection $messagesForFiltered = null): MessageCollection
     {
-        $this->messages = $this->messages->filter(function (Message $message) use ($regex) {
+        if (is_null($messagesForFiltered)) {
+            $messagesForFiltered = $this->messages;
+        }
+        $messages = $messagesForFiltered->filter(function (Message $message) use ($regex) {
             /**
              * Собираем все данные в 1 переменную и будем по ней искать
              */
@@ -122,7 +138,7 @@ class Imap extends Controller
             }
         });
 
-        return $this->messages;
+        return $messages;
     }
 
 
