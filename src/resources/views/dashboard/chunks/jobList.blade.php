@@ -19,8 +19,14 @@
                         </a>
                     </div>
                     <span class="badge bg-primary rounded-pill">
-                    Правил: {{ count($job->rules) }}
-                </span>
+                        Правил: {{ count($job->rules) }}
+                    </span>
+                    <form action="/dashboard/removeJob" method="post">
+                        @csrf
+                        <input type="hidden" name="redirect" value="/dashboard">
+                        <input type="hidden" name="job_id" value="{{$job->id}}">
+                        <button type="submit" class="btn btn-danger btn-link">Удалить</button>
+                    </form>
                 </li>
             @endforeach
         </ol>
@@ -31,7 +37,7 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <form action="/dashboard/addJob" method="POST">
-                @csrf <!-- {{ csrf_field() }} -->
+                @csrf
                 <input type="hidden" name="redirect" value="/dashboard">
                 <div class="modal-header">
                     <h5 class="modal-title" id="exampleModalLabel">Добавить задачу</h5>

@@ -9,114 +9,127 @@
 
 <div class="row">
     <div class="container-fluid">
-        <form action="">
-            <div class="card">
-                <div class="card-header">
+        <div class="card">
+            <div class="card-header">
+                <form action="/dashboard/updateJob" method="post" class="w-100">
+                    @csrf
+                    <input type="hidden" name="redirect" value="/dashboard/{{$job->id}}">
+                    <input type="hidden" name="job_id" value="{{$job->id}}">
                     <div class="input-group">
-                        <input type="text" class="form-control" value="{{ $job->title }}">
-                        <button class="btn btn-success" type="button">
+                        <input type="text" class="form-control" name="title" value="{{ $job->title }}">
+                        <button class="btn btn-success" type="submit">
                             Переименовать
                         </button>
                     </div>
-                </div>
-                <div class="card-body">
-                    @if(!empty($job->last_run))
-                        <h5 class="card-title">Последний запуск задания: {{ date('d.m.Y H:i:s', $job->last_run) }}</h5>
-                    @endif
-                    @if(!empty($job->rules))
-
-                        <div class="accordion mb-3" id="accordionRule">
-                            @foreach($job->rules as $index=>$rule)
-                                <div class="accordion-item">
-                                    <form action="/dashboard/updateRule" method="post">
-                                        @csrf <!-- {{ csrf_field() }} -->
-                                        <input type="hidden" name="redirect" value="/dashboard/{{$job->id}}">
-                                        <input type="hidden" name="rule_id" value="{{$rule->id}}">
-
-                                        <h2 class="accordion-header" id="headingOne">
-                                            <button class="accordion-button" type="button" data-bs-toggle="collapse"
-                                                    data-bs-target="#collapse{{ $rule->id }}"
-                                                    aria-expanded="{{ $index===0 }}"
-                                                    aria-controls="collapseOne">
-                                                {{ $rule->sender }}
-                                            </button>
-                                        </h2>
-                                        <div id="collapse{{ $rule->id }}" class="accordion-collapse collapse show"
-                                             aria-labelledby="headingOne" data-bs-parent="#accordionRule">
-                                            <div class="accordion-body">
-                                                <div class="mb-3">
-                                                    <label class="form-label w-100">
-                                                        Заголовок письма
-                                                        <input type="text" class="form-control" name="theme"
-                                                               value="{{ $rule->theme }}">
-                                                    </label>
-                                                </div>
-
-                                                <div class="mb-3">
-                                                    <label class="form-label w-100">
-                                                        Отправитель письма
-                                                        <input type="email" class="form-control" name="sender"
-                                                               value="{{ $rule->sender }}">
-                                                    </label>
-                                                </div>
-
-                                                <div class="mb-3">
-                                                    <label class="form-label w-100">
-                                                        Регулярное выражение
-                                                        <input type="text" class="form-control" name="regex"
-                                                               value="{{ $rule->regex }}">
-                                                    </label>
-                                                </div>
-                                                <div class="mb-3">
-                                                    <label class="form-label w-100">
-                                                        URL на который отправить запрос
-                                                        <input type="text" class="form-control" name="webhook_ulr"
-                                                               value="{{ $rule->webhook_ulr }}">
-                                                    </label>
-                                                </div>
-                                                <div class="mb-3">
-                                                    <label class="form-label w-100">
-                                                        Метод отправки (GET,POST)
-                                                        <select class="form-select" aria-label="Webhook метод"
-                                                                name="webhook_method">
-                                                            <option value=""
-                                                                    @if(empty($rule->webhook_method)) selected @endif></option>
-                                                            <option value="GET"
-                                                                    @if($rule->webhook_method==='GET') selected @endif>
-                                                                GET
-                                                            </option>
-                                                            <option value="POST"
-                                                                    @if($rule->webhook_method==='POST') selected @endif>
-                                                                POST
-                                                            </option>
-                                                        </select>
-                                                    </label>
-                                                </div>
-                                                <div class="mb-3">
-                                                    <label class="form-label w-100">
-                                                        Данные которые надо отправить в запросе <br>
-                                                        <ul>
-                                                            <li>GET - параметры запроса</li>
-                                                            <li>POST - json</li>
-                                                        </ul>
-                                                        <textarea name="webhook_data" cols="30" rows="10"
-                                                                  class="form-control">
-                                                {{ $rule->webhook_data }}
-                                            </textarea>
-                                                    </label>
-                                                </div>
-                                                <a href="#" class="btn btn-success">Сохранить</a>
-                                            </div>
-                                        </div>
-                                    </form>
-                                </div>
-                            @endforeach
-                        </div>
-
-                    @endif
-                </div>
+                </form>
             </div>
-        </form>
+            <div class="card-body">
+                @if(!empty($job->last_run))
+                    <h5 class="card-title">Последний запуск задания: {{ date('d.m.Y H:i:s', $job->last_run) }}</h5>
+                @endif
+                @if(!empty($job->rules))
+
+                    <div class="accordion mb-3" id="accordionRule">
+                        @foreach($job->rules as $index=>$rule)
+                            <div class="accordion-item">
+                                <h2 class="accordion-header" id="headingOne">
+                                    <div class="btn-group w-100">
+                                        <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                                                data-bs-target="#collapse{{ $rule->id }}"
+                                                aria-expanded="{{ $index===0 }}"
+                                                aria-controls="collapseOne">
+                                            {{ $rule->sender }}
+                                        </button>
+                                        <form action="/dashboard/removeRule" method="post">
+                                            @csrf
+                                            <input type="hidden" name="redirect" value="/dashboard/{{$job->id}}">
+                                            <input type="hidden" name="rule_id" value="{{$rule->id}}">
+                                            <button type="submit" class="btn btn-danger">
+                                                Удалить
+                                            </button>
+                                        </form>
+                                    </div>
+                                </h2>
+                                <div id="collapse{{ $rule->id }}" class="accordion-collapse collapse"
+                                     aria-labelledby="headingOne" data-bs-parent="#accordionRule">
+                                    <div class="accordion-body">
+                                        <form action="/dashboard/updateRule" method="post">
+                                            @csrf
+                                            <input type="hidden" name="redirect" value="/dashboard/{{$job->id}}">
+                                            <input type="hidden" name="rule_id" value="{{$rule->id}}">
+
+                                            <div class="mb-3">
+                                                <label class="form-label w-100">
+                                                    Заголовок письма
+                                                    <input type="text" class="form-control" name="theme"
+                                                           value="{{ $rule->theme }}">
+                                                </label>
+                                            </div>
+
+                                            <div class="mb-3">
+                                                <label class="form-label w-100">
+                                                    Отправитель письма
+                                                    <input type="email" class="form-control" name="sender"
+                                                           value="{{ $rule->sender }}">
+                                                </label>
+                                            </div>
+
+                                            <div class="mb-3">
+                                                <label class="form-label w-100">
+                                                    Регулярное выражение
+                                                    <input type="text" class="form-control" name="regex"
+                                                           value="{{ $rule->regex }}">
+                                                </label>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label class="form-label w-100">
+                                                    URL на который отправить запрос
+                                                    <input type="text" class="form-control" name="webhook_ulr"
+                                                           value="{{ $rule->webhook_url }}">
+                                                </label>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label class="form-label w-100">
+                                                    Метод отправки (GET,POST)
+                                                    <select class="form-select" aria-label="Webhook метод"
+                                                            name="webhook_method">
+                                                        <option value=""
+                                                                @if(empty($rule->webhook_method)) selected @endif></option>
+                                                        <option value="GET"
+                                                                @if($rule->webhook_method==='GET') selected @endif>
+                                                            GET
+                                                        </option>
+                                                        <option value="POST"
+                                                                @if($rule->webhook_method==='POST') selected @endif>
+                                                            POST
+                                                        </option>
+                                                    </select>
+                                                </label>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label class="form-label w-100">
+                                                    Данные которые надо отправить в запросе <br>
+                                                    <ul>
+                                                        <li>GET - параметры запроса</li>
+                                                        <li>POST - json</li>
+                                                    </ul>
+                                                    <textarea name="webhook_data" cols="30" rows="10"
+                                                              class="form-control">
+                                                            {{ $rule->webhook_data }}
+                                                        </textarea>
+                                                </label>
+                                            </div>
+
+                                            <button type="submit" class="btn btn-success">Сохранить</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        @endforeach
+                    </div>
+                @endif
+            </div>
+        </div>
     </div>
 </div>
 
@@ -143,7 +156,7 @@
                     <div class="row mb-2">
                         <label>
                             Отправитель
-                            <input type="email" class="form-control" name="title" value="" placeholder="Отправитель">
+                            <input type="email" class="form-control" name="sender" value="" placeholder="Отправитель">
                         </label>
                     </div>
                     <div class="row mb-2">

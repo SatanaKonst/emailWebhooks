@@ -70,10 +70,21 @@ Route::middleware('auth')->group(function () {
      */
     Route::post('/dashboard/addJob', '\App\Http\Controllers\WebhookEmail@addJob');
 
+    Route::post('/dashboard/updateJob', '\App\Http\Controllers\WebhookEmail@updateJob');
+
+    Route::post('/dashboard/removeJob', '\App\Http\Controllers\WebhookEmail@removeJob');
+
     /**
      * Добавить новое правило
      */
     Route::post('/dashboard/addJobRule', '\App\Http\Controllers\WebhookEmail@addRule');
+
+    /**
+     * Обновить правило
+     */
+    Route::post('/dashboard/updateRule', '\App\Http\Controllers\WebhookEmail@updateRule');
+
+    Route::post('/dashboard/removeRule', '\App\Http\Controllers\WebhookEmail@removeRule');
 
     /**
      * Детальная страница задачи
