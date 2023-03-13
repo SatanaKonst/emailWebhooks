@@ -66,6 +66,16 @@ Route::middleware('auth')->group(function () {
     });
 
     /**
+     * Добавить новую задачу
+     */
+    Route::post('/dashboard/addJob', '\App\Http\Controllers\WebhookEmail@addJob');
+
+    /**
+     * Добавить новое правило
+     */
+    Route::post('/dashboard/addJobRule', '\App\Http\Controllers\WebhookEmail@addRule');
+
+    /**
      * Детальная страница задачи
      */
     Route::get(
@@ -93,4 +103,6 @@ Route::middleware('auth')->group(function () {
         $messages = $imap->get()->filterEmailByFrom('satana.konst@gmail.com');
         dump($messages);
     });
+
+
 });
