@@ -5,6 +5,7 @@ namespace App\Console;
 use App\Http\Controllers\Imap;
 use App\Models\JobRules;
 use App\Models\Jobs;
+use GuzzleHttp\Client;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
@@ -63,7 +64,31 @@ class Kernel extends ConsoleKernel
                         preg_match_all($rule->regex, $data, $matches, PREG_SET_ORDER, 0);
                         if (is_array($matches) && !empty($matches)) {
                             //Отправляем запрос
+                            $method = !empty($rule->webhook_method) ? $rule->webhook_method : 'GET';
+                            $url = $rule->webhook_url;
+                            $webhookData = $rule->webhook_data;
+                            if (!empty($webhookData)) {
+                                $webhookData = str_replace('#REGEX_MATCHES#', json_encode($matches), $data);
+                            }
 
+                            $client = new Client();
+
+                            switch ($method) {
+                                case 'GET':
+                                    $webhookData = mb_split("\n", $webhookData);
+                                    $url .= '?' . http_build_query($webhookData);
+                                    $client->get($url);
+                                    break;
+
+                                case 'POST':
+                                    $client->post(
+                                        $url,
+                                        [
+                                            'json' => $webhookData
+                                        ]
+                                    );
+                                    break;
+                            }
                         }
                     }
                 }

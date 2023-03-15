@@ -76,7 +76,7 @@
 
                                             <div class="mb-3">
                                                 <label class="form-label w-100">
-                                                    Регулярное выражение
+                                                    Регулярное выражение для выборки данных
                                                     <input type="text" class="form-control" name="regex"
                                                            value="{{ $rule->regex }}">
                                                 </label>
@@ -110,8 +110,12 @@
                                                 <label class="form-label w-100">
                                                     Данные которые надо отправить в запросе <br>
                                                     <ul>
-                                                        <li>GET - параметры запроса</li>
+                                                        <li>GET - параметры запроса (каждый с новой строки)</li>
                                                         <li>POST - json</li>
+                                                        <li>
+                                                            <b>#REGEX_MATCHES#</b> Для вставки данных полученных через
+                                                            <i>regex</i>
+                                                        </li>
                                                     </ul>
                                                     <textarea name="webhook_data" cols="30" rows="10"
                                                               class="form-control">
