@@ -35,7 +35,9 @@ RUN apt-get update && \
              libcurl4-openssl-dev \
              pkg-config \
              libldap2-dev \
-             libpq-dev
+             libpq-dev \
+             cron \
+             nano
 
 RUN docker-php-ext-configure intl --enable-intl && \
     docker-php-ext-configure gd --with-freetype --with-jpeg && \
@@ -57,6 +59,5 @@ RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local
 
 RUN a2enmod rewrite && a2enmod headers
 
-RUN touch /etc/cron.d/laravel_schedule && chmod 0644 /etc/cron.d/laravel_schedule && \
-    echo "* * * * * cd /var/www/html && php artisan schedule:run >> /dev/null 2>&1" > /etc/cron.d/laravel_schedule && \
-    touch /var/log/cron.log
+RUN crontab -l | { cat; echo "* * * * * /usr/local/bin/php /var/www/html/artisan schedule:run >> /dev/null 2>&1"; } | crontab -
+CMD ["cron", "-f"]
